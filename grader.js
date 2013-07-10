@@ -38,20 +38,19 @@ var assertFileExists = function(infile) {
     return instr;
 };
 
-
 var assertUrlExists = function(name) {
     return name;
 };
 
 var testUrl = function(name, callback){
     rest.get(name)
-	.on('complete', function(result){
-	    console.log('complete!');
+	.on('success', function(result){
+	    //console.log('complete!');
 	    callback(result);
 	})
-	.on('error', function(result){
-	    console.log("error!");
-	    console.log(result);
+	.on('error', function(){
+	    //console.log("error!");
+	    callback();
 	});
 };
 
@@ -100,23 +99,24 @@ if(require.main == module) {
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists))
-	.option('-u, --url <url path>', 'url Path', clone(assertUrlExists))
+	.option('-u, --url <url_path>', 'url Path', clone(assertUrlExists))
         .parse(process.argv);
 
     if(program.file){
-	console.log("--file");
-	console.log(program.file);
+	//console.log("--file", program.file);
 	var checkJson = checkHtmlFile(program.file, program.checks);
 	var outJson = JSON.stringify(checkJson, null, 4);
 	console.log(outJson);
     }else
     if(program.url){ 
-	console.log("--url ", program.url);
+	//console.log("--url ", program.url);
 	testUrl(program.url, function(content) {
 	    if(content){
 		var checkJson = checkUrlContent(content, program.checks);
 		var outJson = JSON.stringify(checkJson, null, 4);
 		console.log(outJson);
+	    }else{
+		console.log("no content from the url");
 	    }
 	});
 
