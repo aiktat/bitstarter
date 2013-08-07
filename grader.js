@@ -31,9 +31,10 @@ var rest = require("restler");
 
 var assertFileExists = function(infile) {
     var instr = infile.toString();
-    if(!fs.existsSync(instr)) {
-        console.log("%s does not exist. Exiting.", instr);
-        process.exit(1); // http://nodejs.org/api/process.html#process_process_exit_code
+    if(!fs.existsSync( instr)) {
+	console.log("%s does not exist. Exiting.", instr);
+        //process.exit(1); // http://nodejs.org/api/process.html#process_process_exit_code
+	return 0;
     }
     return instr;
 };
@@ -51,7 +52,7 @@ var testUrl = function(name, callback){
 	.on('error', function(){
 	    //console.log("error!");
 	    callback();
-	});
+	}) ;
 };
 
 var cheerioHtmlFile = function(htmlfile) {
@@ -103,13 +104,13 @@ if(require.main == module) {
         .parse(process.argv);
 
     if(program.file){
-	//console.log("--file", program.file);
+	console.log("--file", program.file);
 	var checkJson = checkHtmlFile(program.file, program.checks);
 	var outJson = JSON.stringify(checkJson, null, 4);
 	console.log(outJson);
-    }else
+    }
     if(program.url){ 
-	//console.log("--url ", program.url);
+	console.log("--url ", program.url);
 	testUrl(program.url, function(content) {
 	    if(content){
 		var checkJson = checkUrlContent(content, program.checks);
